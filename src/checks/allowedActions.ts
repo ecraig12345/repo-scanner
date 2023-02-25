@@ -1,11 +1,12 @@
 import { getActionsUrl, octokit } from '../init';
-import { ResultLogger } from '../logger';
-import { RepoDetails } from '../types';
+import { CheckParams } from './types';
 
 /**
  * Settings - Actions - General - Actions permissions
  */
-export async function checkAllowedActions(logger: ResultLogger, repoDetails: RepoDetails) {
+export async function checkAllowedActions(params: CheckParams) {
+  const { logger, repoDetails } = params;
+
   const actionsUrl = getActionsUrl(repoDetails);
 
   // TODO does this work for settings inherited from org?

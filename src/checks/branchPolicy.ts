@@ -1,7 +1,8 @@
 import { getRepoUrl, octokit } from '../init';
 import { processRequestError } from '../utils/processRequestError';
-import { GHData, RepoDetails } from '../types';
-import { ResultLogEntry, ResultLogger } from '../logger';
+import { GHData } from '../types';
+import { ResultLogEntry } from '../logger';
+import { CheckParams } from './types';
 
 type Policy = GHData<typeof octokit.rest.repos.getBranchProtection>;
 type Identities = Required<
@@ -19,11 +20,10 @@ function getIdentityLogs(identities: Identities): ResultLogEntry[] {
 }
 
 function checkPrPolicy(
-  logger: ResultLogger,
-  policy: Policy,
-  defaultBranch: string,
-  branchSettingsUrl: string,
+  params: CheckParams & { defaultBranch: string; branchSettingsUrl: string; policy: Policy },
 ) {
+  const { logger, defaultBranch, branchSettingsUrl, policy } = params;
+
   const prPolicy = policy.required_pull_request_reviews;
   if (!prPolicy) {
     logger.danger(`Pull requests should be required for default branch "${defaultBranch}"`);
@@ -80,11 +80,9 @@ function checkPrPolicy(
 /**
  * Settings - Branches - Branch protection rules - (default branch)
  */
-export async function checkBranchPolicy(
-  logger: ResultLogger,
-  repoDetails: RepoDetails,
-  defaultBranch: string,
-) {
+export async function checkBranchPolicy(params: CheckParams & { defaultBranch: string }) {
+  const { logger, repoDetails, defaultBranch } = params;
+
   const branchSettingsUrl = `${getRepoUrl(repoDetails)}/settings/branches`;
 
   let policy: Policy;
@@ -108,7 +106,7 @@ export async function checkBranchPolicy(
 
   // TODO add proper subhead/section support (the PR policy should really be under the same section
   // but ended up separate due to number of sub-checks of its own)
-  checkPrPolicy(logger, policy, defaultBranch, branchSettingsUrl);
+  checkPrPolicy({ ...params, policy, branchSettingsUrl });
 
   logger.startSection(`Default branch "${defaultBranch}" is protected`);
 

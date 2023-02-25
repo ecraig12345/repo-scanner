@@ -1,12 +1,13 @@
 import { getRepoUrl, octokit } from '../init';
 import { processRequestError } from '../utils/processRequestError';
-import { RepoDetails } from '../types';
-import { ResultLogger } from '../logger';
+import { CheckParams } from './types';
 
 /**
  * Settings - Code security and analysis - Dependabot alerts
  */
-export async function checkSecurityAnalysis(logger: ResultLogger, repoDetails: RepoDetails) {
+export async function checkSecurityAnalysis(params: CheckParams) {
+  const { logger, repoDetails } = params;
+
   const securityUrl = `${getRepoUrl(repoDetails)}/settings/security_analysis`;
 
   // TODO: secret scanning on push (beta enterprise feature, can't find API)

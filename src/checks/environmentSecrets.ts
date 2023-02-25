@@ -1,18 +1,16 @@
 import { getRepoUrl, octokit } from '../init';
 import { processRequestError } from '../utils/processRequestError';
-import { GHData, RepoDetails } from '../types';
-import { ResultLogger } from '../logger';
+import { GHData } from '../types';
+import { CheckParams } from './types';
 
 type Environment = GHData<typeof octokit.rest.repos.getEnvironment>;
 
 /**
  * Settings - Environments - (name)
  */
-export async function checkEnvironmentsSecrets(
-  logger: ResultLogger,
-  repoDetails: RepoDetails,
-  repoId: number,
-) {
+export async function checkEnvironmentsSecrets(params: CheckParams & { repoId: number }) {
+  const { logger, repoDetails, repoId } = params;
+
   let envs: Environment[] | undefined;
   try {
     envs = (await octokit.rest.repos.getAllEnvironments(repoDetails)).data.environments;

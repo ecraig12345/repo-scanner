@@ -1,6 +1,5 @@
 import { octokit } from '../init';
-import { ResultLogger } from '../logger';
-import { RepoDetails } from '../types';
+import { CheckParams } from './types';
 
 // An incomplete regex of common names/substrings for secrets containing sensitive credentials
 // (the groups at the beginning and end are meant to approximate \b but with underscores)
@@ -9,7 +8,9 @@ const dangerPattern = /(^|_)token|pat|auth[^_]*|cred[^_]*|password|secret|key|pa
 /**
  * Settings - Secrets and variables - Actions
  */
-export async function checkActionsSecrets(logger: ResultLogger, repoDetails: RepoDetails) {
+export async function checkActionsSecrets(params: CheckParams) {
+  const { logger, repoDetails } = params;
+
   const secrets = (await octokit.rest.actions.listRepoSecrets(repoDetails)).data.secrets.map(
     (s) => s.name,
   );

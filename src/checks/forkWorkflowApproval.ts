@@ -1,7 +1,7 @@
 import { Browser } from 'puppeteer';
 import { getActionsUrl } from '../init';
-import { ResultLogger } from '../logger';
 import { RepoDetails, GHRepoVisibility } from '../types';
+import { CheckParams } from './types';
 
 /**
  * Settings - Actions - General - Fork pull request workflows from outside collaborators
@@ -9,11 +9,14 @@ import { RepoDetails, GHRepoVisibility } from '../types';
  * This check uses puppeteer due to a missing API.
  */
 export async function checkForkWorkflowApproval(
-  logger: ResultLogger,
-  browser: Browser,
-  repoDetails: RepoDetails,
-  visibility: GHRepoVisibility,
+  params: CheckParams & {
+    browser: Browser;
+    repoDetails: RepoDetails;
+    visibility: GHRepoVisibility;
+  },
 ) {
+  const { logger, browser, repoDetails, visibility } = params;
+
   if (visibility === 'private' || visibility === 'internal') {
     // There are some settings for this under form[action$="/settings/actions/fork_pr_workflows_policy"]
     // but this is less of an immediate security concern, due to limited ability for outside forks.

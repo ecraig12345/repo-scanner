@@ -44,19 +44,19 @@ async function checkRepo(params: {
   // Get repo info which is needed later
   const repo = (await octokit.rest.repos.get(repoDetails)).data;
 
-  await checkActionsSecrets(logger, repoDetails);
-  await checkEnvironmentsSecrets(logger, repoDetails, repo.id);
-  await checkBranchPolicy(logger, repoDetails, repo.default_branch);
-  await checkAllowedActions(logger, repoDetails);
-  await checkWorkflowPerms(logger, repoDetails);
-  await checkSecurityAnalysis(logger, repoDetails);
+  await checkActionsSecrets({ logger, repoDetails });
+  await checkEnvironmentsSecrets({ logger, repoDetails, repoId: repo.id });
+  await checkBranchPolicy({ logger, repoDetails, defaultBranch: repo.default_branch });
+  await checkAllowedActions({ logger, repoDetails });
+  await checkWorkflowPerms({ logger, repoDetails });
+  await checkSecurityAnalysis({ logger, repoDetails });
   browser &&
-    (await checkForkWorkflowApproval(
+    (await checkForkWorkflowApproval({
       logger,
       browser,
       repoDetails,
-      repo.visibility as GHRepoVisibility,
-    ));
+      visibility: repo.visibility as GHRepoVisibility,
+    }));
   console.log('\n');
 
   // Other possible APIs:
