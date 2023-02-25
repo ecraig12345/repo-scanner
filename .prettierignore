@@ -1,0 +1,23 @@
+# generated or imported files
+package-deps.json
+resolve-map.json
+CHANGELOG.*
+*.api.md
+yarn.lock
+*.svg
+*.sh
+
+# generated folders
+node_modules
+lib
+dist
+etc
+change
+__snapshots__
+.next/
+.yarn/
+
+# config files that don't need formatting
+.husky
+.*ignore
+.env
