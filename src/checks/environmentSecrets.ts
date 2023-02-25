@@ -1,12 +1,18 @@
-import { octokit } from '../init';
+import { getRepoUrl, octokit } from '../init';
 import { processRequestError } from '../utils/processRequestError';
-import { RepoDetails } from '../types';
+import { GHData, RepoDetails } from '../types';
+import { ResultLogger } from '../logger';
+
+type Environment = GHData<typeof octokit.rest.repos.getEnvironment>;
 
 /**
  * Settings - Environments - (name)
  */
-export async function checkEnvironmentsSecrets(repoDetails: RepoDetails, repoId: number) {
-  type Environment = Awaited<ReturnType<typeof octokit.rest.repos.getEnvironment>>['data'];
+export async function checkEnvironmentsSecrets(
+  logger: ResultLogger,
+  repoDetails: RepoDetails,
+  repoId: number,
+) {
   let envs: Environment[] | undefined;
   try {
     envs = (await octokit.rest.repos.getAllEnvironments(repoDetails)).data.environments;
@@ -14,10 +20,13 @@ export async function checkEnvironmentsSecrets(repoDetails: RepoDetails, repoId:
     const errInfo = processRequestError(err);
     // 404 means either there are no environments, or the user doesn't have admin perms.
     // Earlier code should have done the admin check, so we can assume no environments.
-    if (errInfo?.status !== 404) throw err;
+    if (errInfo.status !== 404) {
+      logger.unknown('Error getting environments', { details: errInfo.message });
+      return;
+    }
   }
   if (!envs?.length) {
-    console.log('✅ No environments found\n');
+    logger.good('No environments found');
     return;
   }
 
@@ -46,16 +55,18 @@ export async function checkEnvironmentsSecrets(repoDetails: RepoDetails, repoId:
   }
 
   if (dangerEnvs.length === 0) {
-    console.log('✅ No environments contain secrets with inadequate protection');
+    logger.good('No environments contain secrets with inadequate protection');
   } else {
-    console.log('❗️ Environments containing secrets with inadequate protection:');
-    for (const env of dangerEnvs) {
-      console.log(`  ${env.name} (${env.secrets.join(', ')})`);
-    }
-    console.log(
-      'These secrets might be accessible to PRs. Verify whether this is okay,',
-      'and if not, add branch restrictions or or protection rules to the environment.',
-    );
+    // TODO: possibly consider risk level of secrets
+    logger.warning('Some environments contain secrets with inadequate protection', {
+      details:
+        'These secrets might be accessible to PRs. Verify whether this is okay, ' +
+        'and if not, add branch restrictions or or protection rules to the environment.',
+      resolveUrl: `${getRepoUrl(repoDetails)}/settings/environments`,
+      subLogs: dangerEnvs.map((env) => ({
+        type: 'info' as const,
+        message: `${env.name} (${env.secrets.join(', ')})`,
+      })),
+    });
   }
-  console.log();
 }

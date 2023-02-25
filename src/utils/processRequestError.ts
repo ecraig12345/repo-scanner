@@ -10,9 +10,11 @@ export function processRequestError(err: unknown) {
       response?: { data?: { documentation_url?: string } };
     };
     return {
-      message: reqError.message,
+      message: `Request error (${reqError.status}): ${reqError.message}`,
       status: reqError.status,
       docUrl: reqError.response?.data?.documentation_url,
     };
   }
+
+  return { message: String(err) };
 }
