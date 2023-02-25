@@ -79,6 +79,8 @@ export async function checkBranchPolicy(repoDetails: RepoDetails, defaultBranch:
     ).data;
   } catch (err) {
     const errInfo = processRequestError(err);
+    // 404 means either the branch isn't protected, or the user doesn't have admin perms.
+    // Earlier code should have done the admin check, so we can assume not protected here.
     if (errInfo?.status === 404) {
       console.log(
         `❌ Default branch "${defaultBranch}" is not protected. Add a policy at`,

@@ -10,8 +10,17 @@ import { RepoDetails, RepoVisbility } from './types';
 import { octokit, options, repos } from './init';
 import { startPuppeteer } from './utils/startPuppeteer';
 
-async function checkRepo(browser: Browser | undefined, repoDetails: RepoDetails) {
+async function checkRepo(username: string, browser: Browser | undefined, repoDetails: RepoDetails) {
   console.log(`======== ${repoDetails.owner}/${repoDetails.repo} ========\n`);
+
+  // Verify adequate perms
+  const perms = (
+    await octokit.rest.repos.getCollaboratorPermissionLevel({ ...repoDetails, username })
+  ).data;
+  if (!perms.user?.permissions?.admin) {
+    console.log('❓ You must be a repo admin to run this script\n');
+    return;
+  }
 
   // Get repo info which is needed later (also verify the token has access)
   const repo = (await octokit.rest.repos.get(repoDetails)).data;
@@ -32,11 +41,13 @@ async function checkRepo(browser: Browser | undefined, repoDetails: RepoDetails)
 }
 
 (async () => {
+  const username = (await octokit.rest.users.getAuthenticated()).data.login;
+
   const browser = options.browser ? await startPuppeteer() : undefined;
 
   console.log();
   for (const repo of repos) {
-    await checkRepo(browser, repo);
+    await checkRepo(username, browser, repo);
   }
 
   await browser?.close();

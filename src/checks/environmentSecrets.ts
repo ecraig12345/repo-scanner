@@ -9,7 +9,8 @@ export async function checkEnvironmentsSecrets(repoDetails: RepoDetails, repoId:
     envs = (await octokit.rest.repos.getAllEnvironments(repoDetails)).data.environments;
   } catch (err) {
     const errInfo = processRequestError(err);
-    // This threw with 404 for a private repo without environments
+    // 404 means either there are no environments, or the user doesn't have admin perms.
+    // Earlier code should have done the admin check, so we can assume no environments.
     if (errInfo?.status !== 404) throw err;
   }
   if (!envs?.length) {

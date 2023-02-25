@@ -2,6 +2,8 @@
 
 Tool for scanning GitHub repo configuration for security concerns.
 
+Note that **you must be a repo admin** for this to work.
+
 To try it out before the package is published:
 
 1. Clone the repo
