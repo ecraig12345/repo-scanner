@@ -2,6 +2,9 @@ import { getRepoUrl, octokit } from '../init';
 import { processRequestError } from '../utils/processRequestError';
 import { RepoDetails } from '../types';
 
+/**
+ * Settings - Code security and analysis - Dependabot alerts
+ */
 export async function checkSecurityAnalysis(repoDetails: RepoDetails) {
   const securityUrl = `${getRepoUrl(repoDetails)}/settings/security_analysis`;
 

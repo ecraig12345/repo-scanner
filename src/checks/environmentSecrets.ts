@@ -2,6 +2,9 @@ import { octokit } from '../init';
 import { processRequestError } from '../utils/processRequestError';
 import { RepoDetails } from '../types';
 
+/**
+ * Settings - Environments - (name)
+ */
 export async function checkEnvironmentsSecrets(repoDetails: RepoDetails, repoId: number) {
   type Environment = Awaited<ReturnType<typeof octokit.rest.repos.getEnvironment>>['data'];
   let envs: Environment[] | undefined;

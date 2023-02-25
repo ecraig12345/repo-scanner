@@ -6,6 +6,9 @@ const dangerPatterns = ['npm', 'repo_pat', 'gh_token', 'github_pat', 'gh_pat'].m
   (str) => new RegExp(`(^|_)${str}(_|$)`, 'i'),
 );
 
+/**
+ * Settings - Secrets and variables - Actions
+ */
 export async function checkActionsSecrets(repoDetails: RepoDetails) {
   const secrets = (await octokit.rest.actions.listRepoSecrets(repoDetails)).data.secrets;
   if (secrets.length === 0) {

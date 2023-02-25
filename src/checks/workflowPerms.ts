@@ -1,6 +1,9 @@
 import { getActionsUrl, octokit } from '../init';
 import { RepoDetails } from '../types';
 
+/**
+ * Settings - Actions - General - Workflow permissions
+ */
 export async function checkWorkflowPerms(repoDetails: RepoDetails) {
   const actionsUrl = getActionsUrl(repoDetails);
 

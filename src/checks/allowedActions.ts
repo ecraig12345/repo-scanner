@@ -1,6 +1,9 @@
 import { getActionsUrl, octokit } from '../init';
 import { RepoDetails } from '../types';
 
+/**
+ * Settings - Actions - General - Actions permissions
+ */
 export async function checkAllowedActions(repoDetails: RepoDetails) {
   const actionsUrl = getActionsUrl(repoDetails);
 

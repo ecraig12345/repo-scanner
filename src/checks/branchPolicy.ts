@@ -69,6 +69,9 @@ function checkPrPolicy(policy: Policy) {
   }
 }
 
+/**
+ * Settings - Branches - Branch protection rules - (default branch)
+ */
 export async function checkBranchPolicy(repoDetails: RepoDetails, defaultBranch: string) {
   const branchSettingsUrl = `${getRepoUrl(repoDetails)}/settings/branches`;
 

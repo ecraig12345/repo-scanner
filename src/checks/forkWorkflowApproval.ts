@@ -2,6 +2,11 @@ import { Browser } from 'puppeteer';
 import { getActionsUrl } from '../init';
 import { RepoDetails, RepoVisbility } from '../types';
 
+/**
+ * Settings - Actions - General - Fork pull request workflows from outside collaborators
+ *
+ * This check uses puppeteer due to a missing API.
+ */
 export async function checkForkWorkflowApproval(
   browser: Browser,
   repoDetails: RepoDetails,
