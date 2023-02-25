@@ -7,7 +7,7 @@ import { checkForkWorkflowApproval } from './checks/forkWorkflowApproval';
 import { checkSecurityAnalysis } from './checks/securityAnalysis';
 import { checkWorkflowPerms } from './checks/workflowPerms';
 import { RepoDetails, RepoVisbility } from './types';
-import { octokit, repos } from './init';
+import { octokit, options, repos } from './init';
 import { startPuppeteer } from './utils/startPuppeteer';
 
 async function checkRepo(browser: Browser | undefined, repoDetails: RepoDetails) {
@@ -32,15 +32,14 @@ async function checkRepo(browser: Browser | undefined, repoDetails: RepoDetails)
 }
 
 (async () => {
-  console.log();
-  // const browser = undefined;
-  const browser = await startPuppeteer();
+  const browser = options.browser ? await startPuppeteer() : undefined;
 
+  console.log();
   for (const repo of repos) {
     await checkRepo(browser, repo);
   }
 
-  await browser.close();
+  await browser?.close();
 })().catch((err) => {
   console.error(err?.stack || err?.message || err);
   process.exit(1);

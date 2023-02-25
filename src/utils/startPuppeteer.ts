@@ -2,10 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import puppeteer, { Browser } from 'puppeteer';
-import { githubUrl } from '../init';
+import { githubUrl, name } from '../init';
 
-// TODO name
-const tempdir = path.join(os.tmpdir(), 'secure-repo');
+const tempdir = path.join(os.tmpdir(), name);
 
 let browser: Browser | undefined;
 
@@ -30,11 +29,14 @@ export async function startPuppeteer() {
   });
   const page = (await browser.pages())[0];
 
-  // log in
+  // Log in...
   const loginUrl = githubUrl + '/login';
   await page.goto(loginUrl);
+  // If the user is already logged in, this will redirect to the GitHub homepage
   if (page.url() === loginUrl) {
+    // Otherwise, ask the user to log in
     await page.evaluate(() => alert('Please log in to GitHub'));
+    // Wait for the homepage to load (meaning login is complete)
     while (page.url() !== githubUrl) {
       await page.waitForTimeout(1000);
     }
