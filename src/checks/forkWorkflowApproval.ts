@@ -1,5 +1,5 @@
 import { Browser } from 'puppeteer';
-import { getActionsUrl } from '../utils/init';
+import { getActionsUrl } from '../init';
 import { RepoDetails, RepoVisbility } from '../types';
 
 export async function checkForkWorkflowApproval(

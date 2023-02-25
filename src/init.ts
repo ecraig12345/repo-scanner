@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { Octokit } from 'octokit';
-import { RepoDetails } from '../types';
+import { RepoDetails } from './types';
 
 const repoInfos = process.argv.slice(2);
 

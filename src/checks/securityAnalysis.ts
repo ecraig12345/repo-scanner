@@ -1,4 +1,4 @@
-import { getRepoUrl, octokit } from '../utils/init';
+import { getRepoUrl, octokit } from '../init';
 import { processRequestError } from '../utils/processRequestError';
 import { RepoDetails } from '../types';
 

@@ -1,4 +1,4 @@
-import { octokit } from '../utils/init';
+import { octokit } from '../init';
 import { RepoDetails } from '../types';
 
 // An incomplete list of common names/substrings for secrets containing sensitive credentials

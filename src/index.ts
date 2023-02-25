@@ -7,7 +7,7 @@ import { checkForkWorkflowApproval } from './checks/forkWorkflowApproval';
 import { checkSecurityAnalysis } from './checks/securityAnalysis';
 import { checkWorkflowPerms } from './checks/workflowPerms';
 import { RepoDetails, RepoVisbility } from './types';
-import { octokit, repos } from './utils/init';
+import { octokit, repos } from './init';
 import { startPuppeteer } from './utils/startPuppeteer';
 
 async function checkRepo(browser: Browser | undefined, repoDetails: RepoDetails) {

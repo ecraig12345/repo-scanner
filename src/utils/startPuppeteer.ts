@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import puppeteer, { Browser } from 'puppeteer';
-import { githubUrl } from './init';
+import { githubUrl } from '../init';
 
 // TODO name
 const tempdir = path.join(os.tmpdir(), 'secure-repo');

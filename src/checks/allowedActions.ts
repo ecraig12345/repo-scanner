@@ -1,4 +1,4 @@
-import { getActionsUrl, octokit } from '../utils/init';
+import { getActionsUrl, octokit } from '../init';
 import { RepoDetails } from '../types';
 
 export async function checkAllowedActions(repoDetails: RepoDetails) {
