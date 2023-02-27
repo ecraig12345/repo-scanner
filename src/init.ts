@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { Octokit } from 'octokit';
 import { Options, RepoDetails } from './types';
 
-export const name = 'secure-repo';
+export const name = 'repo-scanner';
 
 dotenv.config();
 const token = process.env.GITHUB_TOKEN;

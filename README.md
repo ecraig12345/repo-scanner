@@ -1,6 +1,6 @@
-# secure-repo
+# repo-scanner
 
-Tool for scanning GitHub repo configuration for security concerns.
+Tool for scanning GitHub repo configuration for potential security concerns.
 
 Note that **you must be a repo admin** for this to work.
 
