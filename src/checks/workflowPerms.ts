@@ -13,19 +13,15 @@ export async function checkWorkflowPerms(params: CheckParams) {
     await octokit.rest.actions.getGithubActionsDefaultWorkflowPermissionsRepository(repoDetails)
   ).data;
   if (workflowPerms.default_workflow_permissions === 'write') {
-    logger.danger(
-      '"Workflow permissions" is set to allow write access from workflows, including PRs',
-      {
-        details:
-          'This is NOT SAFE and should IMMEDIATELY be changed to read-only, with specific perms ' +
-          'granted to individual workflows as needed using a "permissions" block. Otherwise, a ' +
-          "malicious actor could steal the token from their PR's build and push code to " +
-          'unprotected branches, create tags, possibly approve PRs, or other actions.',
-        resolveUrl: actionsUrl,
-        docsUrl:
-          'https://docs.github.com/en/actions/security-guides/automatic-token-authentication',
-      },
-    );
+    logger.danger('"Workflow permissions" is set to allow write access from workflows', {
+      details:
+        'This should be changed to read-only, with specific perms granted to individual ' +
+        'workflows as needed using a "permissions" block. (Fork PR workflows run via the ' +
+        "pull_request trigger will always get a read-only token, but it's still good practice " +
+        'to minimize possible access from main branch workflows or in-repo PR workflows.)',
+      resolveUrl: actionsUrl,
+      docsUrl: 'https://docs.github.com/en/actions/security-guides/automatic-token-authentication',
+    });
   } else {
     logger.good('"Workflow permissions" setting is read-only');
   }
